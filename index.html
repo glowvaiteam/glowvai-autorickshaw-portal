@@ -109,11 +109,13 @@
       var clientIp = 'UNKNOWN';
       var location = '';
 
-      fetch('https://ipapi.co/json/', { mode: 'cors' })
+      fetch('https://ip-api.com/json/?fields=status,query,city,regionName,country', { mode: 'cors' })
         .then(function(r) { return r.json(); })
         .then(function(geo) {
-          clientIp = geo.ip || 'UNKNOWN';
-          location = [(geo.city || ''), (geo.region || ''), (geo.country_name || '')].filter(Boolean).join(', ');
+          if (geo && geo.status === 'success') {
+            clientIp = geo.query || 'UNKNOWN';
+            location = [(geo.city || ''), (geo.regionName || ''), (geo.country || '')].filter(Boolean).join(', ');
+          }
         })
         .catch(function() {})
         .finally(function() {
